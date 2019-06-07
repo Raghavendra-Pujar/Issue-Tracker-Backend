@@ -1,0 +1,7 @@
+{
+    "name": "Issue Tracker Tool",
+    "version": "1.0.0",
+    "description": "Issue Tracker docs",
+    "title": "apiDoc for issue-tracker",
+    "url" : "https://localhost:3000/apiDoc"
+  }
