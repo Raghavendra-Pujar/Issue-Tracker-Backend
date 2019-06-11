@@ -2,5 +2,6 @@
     "name": "Issue Tracker Tool",
     "version": "1.0.0",
     "description": "Issue Tracker docs",
-    "title": "apiDoc for issue-tracker"
+    "title": "apiDoc for issue-tracker",
+    "url" : "http://raghavendra-pujar.site"
   }
