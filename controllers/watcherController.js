@@ -37,7 +37,7 @@ let addWatcher = (req, res) => {
 
     let checkAlreadyWatcher = () =>{
         return new Promise ((resolve,reject)=>{
-            watcherModel.findOne({watcher : req.user},((err,result)=>{
+            watcherModel.findOne({watcher : req.user,issue : req.issue}).exec((err,result)=>{
                 if(err){
                     logger.info(err.message, 'watcherController.createIssue', 10)
                     let apiResponse = response.generate(true, 'Database error', 400, null);
@@ -45,10 +45,10 @@ let addWatcher = (req, res) => {
                 }else if(check.isEmpty(result)){
                     resolve()
                 }else{
-                    let apiResponse = response.generate(true,'You are already watching this issue',409,null);
+                    let apiResponse = response.generate(true,'You are already watching this issue',400,result);
                     reject(apiResponse);
                 }
-            }))
+            })
         })
     }
 

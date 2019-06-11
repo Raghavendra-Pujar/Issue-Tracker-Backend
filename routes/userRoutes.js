@@ -41,12 +41,12 @@ module.exports.setRouter = (app) => {
  * 
  * @apiErrorExample {object} Error-Response :
  * {
- *   {
+ *   
      "error": true,
      "message": "Email is missing",
      "status": 500,
      "data": null
-      }
+      
  * }
 */
 
@@ -86,12 +86,12 @@ app.post(`${baseUrl}/users/signup`,userController.signUp);
  * 
  * @apiErrorExample {object} Error-Response :
  * {
- *   {
+ *   
     "error": true,
     "message": "User Already Present With this Email",
     "status": 403,
     "data": null
-      }
+      
  * }
 */
 app.post(`${baseUrl}/users/verifyEmail`,userController.verifyEmail);

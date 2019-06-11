@@ -3,6 +3,83 @@ define({ "api": [
     "group": "create",
     "version": "1.0.0",
     "type": "post",
+    "url": "/api/v1/comment/create",
+    "title": "api for writing a comment",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "authToken",
+            "description": "<p>authToken of the user received while  logging in . (body params) (required)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "issueId",
+            "description": "<p>issueId of the issue where comment is to be posted {body params} {required}</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "comment",
+            "description": "<p>text or string  of the comment to be posted. {body params} {required}</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response",
+          "content": "    {\n    \"error\": false,\n    \"message\": \"Comment added successfully\",\n    \"status\": 200,\n    \"data\": {\n        \"issueId\": \"ai4ZN2aZr\",\n        \"comment\": \"Commented posted for documentation\",\n        \"_id\": \"5cff75bab25d3a18edef2baa\",\n        \"commentId\": \"VMh5T6jYs\",\n        \"commentor\": \"5ced7fa925348e3b7da8d0a7\",\n        \"created\": \"2019-06-11T09:34:50.000Z\",\n        \"__v\": 0\n    }\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response :",
+          "content": "\n{\n    \"error\": true,\n    \"message\": \"Issue not exists\",\n    \"status\": 404,\n    \"data\": null\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "filename": "routes/issueRoutes.js",
+    "groupTitle": "create",
+    "name": "PostApiV1CommentCreate"
+  },
+  {
+    "group": "create",
+    "version": "1.0.0",
+    "type": "post",
     "url": "/api/v1/issue/raise",
     "title": "api for raising an issue",
     "parameter": {
@@ -81,7 +158,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response :",
-          "content": "{\n  {\n       \"error\": true,\n       \"message\": \"Invalid Or Expired AuthorizationKey\",\n       \"status\": 404,\n       \"data\": null\n         }\n}",
+          "content": "{\n  \n       \"error\": true,\n       \"message\": \"Invalid Or Expired AuthorizationKey\",\n       \"status\": 404,\n       \"data\": null\n}",
           "type": "object"
         }
       ]
@@ -151,7 +228,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response :",
-          "content": "{\n  {\n     \"error\": true,\n     \"message\": \"Email is missing\",\n     \"status\": 500,\n     \"data\": null\n      }\n}",
+          "content": "{\n  \n     \"error\": true,\n     \"message\": \"Email is missing\",\n     \"status\": 500,\n     \"data\": null\n}",
           "type": "object"
         }
       ]
@@ -242,7 +319,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response :",
-          "content": "{\n  {\n    \"error\": true,\n    \"message\": \"User Already Present With this Email\",\n    \"status\": 403,\n    \"data\": null\n      }\n}",
+          "content": "{\n  \n    \"error\": true,\n    \"message\": \"User Already Present With this Email\",\n    \"status\": 403,\n    \"data\": null\n}",
           "type": "object"
         }
       ]
@@ -250,6 +327,146 @@ define({ "api": [
     "filename": "routes/userRoutes.js",
     "groupTitle": "create",
     "name": "PostApiV1UsersSignup"
+  },
+  {
+    "group": "create",
+    "version": "1.0.0",
+    "type": "post",
+    "url": "/api/v1/watcher/add",
+    "title": "api for adding watcher to an Issue",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "authToken",
+            "description": "<p>authToken of the user received while  logging in . (body params) (required)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "issueId",
+            "description": "<p>issueId of the issue where comment is to be posted {body params} {required}     *</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response",
+          "content": "      {\n    \"error\": false,\n    \"message\": \"Watcher added successfully\",\n    \"status\": 200,\n    \"data\": {\n        \"_id\": \"5cff87a671d9512af087b8b7\",\n        \"issue\": \"5cff879d71d9512af087b8b4\",\n        \"watcher\": \"5ce446badd08810ec4efcf16\",\n        \"addedOn\": \"2019-06-11T10:51:18.219Z\",\n        \"__v\": 0\n    }\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response :",
+          "content": "\n  {\n    \"error\": true,\n    \"message\": \"You are already watching this issue\",\n    \"status\": 400,\n    \"data\": {\n        \"_id\": \"5cff879d71d9512af087b8b6\",\n        \"issue\": \"5cff879d71d9512af087b8b4\",\n        \"watcher\": \"5ce44364dd08810ec4efcf14\",\n        \"addedOn\": \"2019-06-11T10:51:09.239Z\",\n        \"__v\": 0\n    }\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "filename": "routes/issueRoutes.js",
+    "groupTitle": "create",
+    "name": "PostApiV1WatcherAdd"
+  },
+  {
+    "group": "read",
+    "version": "1.0.0",
+    "type": "post",
+    "url": "/api/v1/comment/viewCommentsById",
+    "title": "api for viewing comments of an Issue",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "authToken",
+            "description": "<p>authToken of the user received while  logging in . (body params) (required)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "issueId",
+            "description": "<p>issueId of the issue where comment is to be posted {body params} {required}     *</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response",
+          "content": "{\n\"error\": false,\n\"message\": \"Comments found\",\n\"status\": 200,\n\"data\": [\n    {\n        \"issueId\": \"eZ9AJk3E6\",\n        \"comment\": \"testing for documentation\",\n        \"_id\": \"5cff797ad9a5901f9c572e97\",\n        \"commentId\": \"gb4zNT_Ui\",\n        \"commentor\": {\n            \"userName\": \"Nithin Kumar\",\n            \"_id\": \"5ced7fa925348e3b7da8d0a7\"\n        },\n        \"created\": \"2019-06-11T09:50:50.000Z\",\n        \"__v\": 0\n    },\n    {\n        \"issueId\": \"eZ9AJk3E6\",\n        \"comment\": \"ok now\",\n        \"_id\": \"5cff7bf326cea0212675d102\",\n        \"commentId\": \"Xd8W6fltx\",\n        \"commentor\": {\n            \"userName\": \"Nithin Kumar\",\n            \"_id\": \"5ced7fa925348e3b7da8d0a7\"\n        },\n        \"created\": \"2019-06-11T10:01:23.000Z\",\n        \"__v\": 0\n    }",
+          "type": "object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response :",
+          "content": "\n{\n    \"error\": true,\n    \"message\": \"Issue not exists\",\n    \"status\": 404,\n    \"data\": null\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "filename": "routes/issueRoutes.js",
+    "groupTitle": "read",
+    "name": "PostApiV1CommentViewcommentsbyid"
   },
   {
     "group": "read",
@@ -285,7 +502,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response",
-          "content": "{\n   {\n           \"error\": false,\n           \"message\": \"Issue found\",\n           \"status\": 200,\n           \"data\": \n             {\n            \"issueId\": \"IiCAoB2XW\",\n            \"title\": \"Edited First ever issue\",\n            \"description\": \"edited description\",\n            \"_id\": \"5cdd586c6f3a011c8ee2b75c\",\n            \"reporter\": \"5cda9c6f48baf620737888c0\",\n            \"assignee\": \"5cdd550958e3ad1a33728aed\",\n            \"status\": \"backlog\",\n            \"createdOn\": \"2019-05-16T12:32:44.896Z\",\n            \"__v\": 0\n           }\n}",
+          "content": "{\n   \n           \"error\": false,\n           \"message\": \"Issue found\",\n           \"status\": 200,\n           \"data\": \n             {\n            \"issueId\": \"IiCAoB2XW\",\n            \"title\": \"Edited First ever issue\",\n            \"description\": \"edited description\",\n            \"_id\": \"5cdd586c6f3a011c8ee2b75c\",\n            \"reporter\": \"5cda9c6f48baf620737888c0\",\n            \"assignee\": \"5cdd550958e3ad1a33728aed\",\n            \"status\": \"backlog\",\n            \"createdOn\": \"2019-05-16T12:32:44.896Z\",\n            \"__v\": 0\n             }\n}",
           "type": "object"
         }
       ]
@@ -305,7 +522,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response :",
-          "content": "{\n  {\n       \"error\": true,\n       \"message\": \"Invalid Or Expired AuthorizationKey\",\n       \"status\": 404,\n       \"data\": null\n         }\n}",
+          "content": "{\n  \n       \"error\": true,\n       \"message\": \"Invalid Or Expired AuthorizationKey\",\n       \"status\": 404,\n       \"data\": null\n}",
           "type": "object"
         }
       ]
@@ -313,5 +530,243 @@ define({ "api": [
     "filename": "routes/issueRoutes.js",
     "groupTitle": "read",
     "name": "PostApiV1IssueGetissueByAssignee"
+  },
+  {
+    "group": "read",
+    "version": "1.0.0",
+    "type": "post",
+    "url": "/api/v1/issue/viewIssueById",
+    "title": "api for viewing an issue",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "authToken",
+            "description": "<p>authToken of the user received while  logging in . (body params) (required)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "issueId",
+            "description": "<p>IssueId of the Issue to be viewed</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response",
+          "content": "{\n     \n            \"error\": false,\n            \"message\": \"Issue found with these details\",\n            \"status\": 200,\n            \"data\": {\n              \"issueId\": \"ai4ZN2aZr\",\n              \"title\": \"Watcher errors\",\n              \"description\": \"<p>Watcher array is not added with reporters and assignee</p>\\n\",\n               \"_id\": \"5cf6667b9daef31c014ee964\",\n              \"reporter\": {\n                 \"userName\": \"Sree Latha\",\n                  \"_id\": \"5ce446badd08810ec4efcf16\"\n               },\n              \"assignee\": {\n                  \"userName\": \"Nithin Kumar\",\n                  \"email\": \"nithin@gmail.com\",\n                  \"_id\": \"5ced7fa925348e3b7da8d0a7\"\n                },\n            \"status\": \"in-test\",\n            \"createdOn\": \"2019-06-04T12:39:23.054Z\",\n            \"__v\": 0\n        }\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response :",
+          "content": "{\n  \n      \"error\": true,\n      \"message\": \"No such issue found\",\n      \"status\": 404,\n      \"data\": null\n}\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "filename": "routes/issueRoutes.js",
+    "groupTitle": "read",
+    "name": "PostApiV1IssueViewissuebyid"
+  },
+  {
+    "group": "search",
+    "version": "1.0.0",
+    "type": "post",
+    "url": "/api/v1/issue/search",
+    "title": "api for searching an issue with any keyword",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "authToken",
+            "description": "<p>authToken of the user received while  logging in . (body params) (required)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "text",
+            "description": "<p>text or string to be serached in the database</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response",
+          "content": "{\n      \n    \"error\": false,\n    \"message\": \"Search results\",\n    \"status\": 200,\n    \"data\": [\n        {\n            \"issueId\": \"ktDYdqx8B\",\n            \"title\": \"validations from postman edited\",\n            \"description\": \"<p>you have to test it for assignee Email</p>\\n\",\n            \"_id\": \"5cf6a4355cf4b83387f7b6b2\",\n            \"reporter\": {\n                \"userName\": \"Raghavendra Pujar\",\n                \"_id\": \"5ce44364dd08810ec4efcf14\"\n            },\n            \"assignee\": \"5ced7fa925348e3b7da8d0a7\",\n            \"status\": \"done\",\n            \"createdOn\": \"2019-06-04T17:02:45.992Z\",\n            \"__v\": 0,\n            \"score\": 0.6666666666666666\n        }\n    ]\n\n     }",
+          "type": "object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response :",
+          "content": "{\n  \n    \"error\": true,\n    \"message\": \"No such word exists in the database\",\n    \"status\": 404,\n    \"data\": null\n}\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "filename": "routes/issueRoutes.js",
+    "groupTitle": "search",
+    "name": "PostApiV1IssueSearch"
+  },
+  {
+    "group": "update",
+    "version": "1.0.0",
+    "type": "put",
+    "url": "/api/v1/issue/:issueId/editIssue",
+    "title": "api for editing an issue",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "authToken",
+            "description": "<p>authToken of the user received while  logging in . (body params) (required)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "issueId",
+            "description": "<p>IssueId of the Issue to be edited</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Edited Title</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "description",
+            "description": "<p>Edited Description of the Issue</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "assigneeEmail",
+            "description": "<p>Edited email of the assignee</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Edited status of the Issue</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response",
+          "content": "   {\n    \"error\": false,\n    \"message\": \"Issue Edited Successfully.\",\n    \"status\": 200,\n    \"data\": {\n        \"issueId\": \"ai4ZN2aZr\",\n        \"title\": \"Watcher errors\",\n        \"description\": \"<p>Watcher array is not added with reporters and assignee</p>\\\\n\",\n        \"_id\": \"5cf6667b9daef31c014ee964\",\n        \"reporter\": \"5ce446badd08810ec4efcf16\",\n        \"assignee\": \"5ced7fa925348e3b7da8d0a7\",\n        \"status\": \"in-test\",\n        \"createdOn\": \"2019-06-04T12:39:23.054Z\",\n        \"__v\": 0\n    }\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "object",
+            "optional": false,
+            "field": "apiResponse",
+            "description": "<p>shows error status, message, http status code, result.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response :",
+          "content": "{\n  \n      \"error\": true,\n      \"message\": \"Invalid Or Expired AuthorizationKey\",\n      \"status\": 404,\n      \"data\": null\n}",
+          "type": "object"
+        }
+      ]
+    },
+    "filename": "routes/issueRoutes.js",
+    "groupTitle": "update",
+    "name": "PutApiV1IssueIssueidEditissue"
   }
 ] });

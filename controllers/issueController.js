@@ -10,6 +10,7 @@ const logger = require('../libs/loggerLib');
 const response = require('../libs/responseLib');
 const check = require('../libs/checkLib');
 const time = require('../libs/timeLib');
+const eventEmitter = require('../libs/eventLib').eventEmitter
 
 let raiseIssue = (req, res) => {
 
@@ -18,8 +19,8 @@ let raiseIssue = (req, res) => {
             if (check.isEmpty(req.body.assigneeEmail)) {
                 let apiResponse = response.generate(true, 'Assignee Email is missing', 404, null);
                 reject(apiResponse);
-            } else if(req.body.assigneeEmail === req.user.email){
-                let apiResponse = response.generate(true,'Cannot assign to self',500,null);
+            } else if (req.body.assigneeEmail === req.user.email) {
+                let apiResponse = response.generate(true, 'Cannot assign to self', 500, null);
                 reject(apiResponse);
             }
             else {
@@ -126,7 +127,7 @@ let editIssue = (req, res) => {
             if (check.isEmpty(req.body.assigneeEmail)) {
                 let apiResponse = response.generate(true, 'Assignee Email is missing', 404, null);
                 reject(apiResponse);
-            } 
+            }
             else {
                 userModel.findOne({ email: req.body.assigneeEmail }).exec((err, result) => {
                     if (err) {
@@ -146,7 +147,7 @@ let editIssue = (req, res) => {
         })
     }
 
- 
+
 
 
     let edit = () => {
@@ -167,27 +168,40 @@ let editIssue = (req, res) => {
                         let apiResponse = response.generate(true, 'Issue Not Found', 404, null)
                         reject(apiResponse)
                     } else {
-                       watcherController.deleteWatcher(result.assignee);
+                        watcherController.deleteWatcher(result.assignee);
 
-                       if(req.assignee === result.reporter){
-                        let apiResponse = response.generate(true, 'Reporter cannot be assigned', 404, null)
-                        reject(apiResponse)
-                       }
-                       result.assignee = req.assignee;
-                       result.title = req.body.title;
-                       result.description = req.body.description;
-                       result.status = req.body.status;
-            
-                       result.save((err,resp)=>{
-                        if (err) {
-                            logger.error(err.message, 'issueController.editIssue', 10)
-                            let apiResponse = response.generate(true, 'Database error', 400, null);
-                            reject(apiResponse);
-                        }else{
-                            watcherController.addReporterAndAssignee(result)
-                            resolve(resp)
+                        if (req.assignee === result.reporter) {
+                            let apiResponse = response.generate(true, 'Reporter cannot be assigned', 404, null)
+                            reject(apiResponse)
                         }
-                       })
+                        result.assignee = req.assignee;
+                        result.title = req.body.title;
+                        result.description = req.body.description;
+                        result.status = req.body.status;
+
+                        result.save((err, resp) => {
+                            if (err) {
+                                logger.error(err.message, 'issueController.editIssue', 10)
+                                let apiResponse = response.generate(true, 'Database error', 400, null);
+                                reject(apiResponse);
+                            } else {
+                                watcherController.addReporterAndAssignee(result)
+                                let apiResponse = response.generate(false, 'Issue Edited Successfully.', 200, resp)
+                                res.send(apiResponse)
+                                let notification = new notificationModel({
+                                    notificationType: 'edit',
+                                    issueId: req.body.issueId,
+                                    userId: req.user.userId,
+                                    title: 'Issue has been edited',
+                                    message: `${req.user.userName} has edited the issue`
+
+                                })
+                                console.log('sending to socket')
+
+                                eventEmitter.emit(notification.notificationType, notification);
+
+                            }
+                        })
                     }
                 })
             }
@@ -198,19 +212,6 @@ let editIssue = (req, res) => {
         .then(edit)
         .then((resolve) => {
             console.log('inside sucess promises')
-            let apiResponse = response.generate(false, 'Issue Edited Successfully.', 200, resolve)
-            res.send(apiResponse)
-            let notification = new notificationModel({
-                notificationType : 'edit',
-                issueId : req.body.issueId,
-                userId : req.user.userId,
-                title : 'Issue has been edited',
-                message : `${req.user.userName} has edited the issue`
-
-            })
-            console.log('sending to socket')
-           
-            eventEmitter.emit(notification.notificationType,notification);
 
         }).catch((err) => {
             res.send(err)
@@ -224,7 +225,7 @@ let viewIssueById = (req, res) => {
         let apiResponse = response.generate(true, 'IssueId is missing', 404, null);
         res.send(apiResponse);
     } else {
-        issueModel.findOne({ issueId: req.body.issueId }).populate('reporter','userName').populate('assignee','userName email').exec((err, issueDetails) => {
+        issueModel.findOne({ issueId: req.body.issueId }).populate('reporter', 'userName').populate('assignee', 'userName email').exec((err, issueDetails) => {
             if (err) {
                 logger.info('err.message', 'issueController.editIssue', 10)
                 let apiResponse = response.generate(true, 'Database error', 400, null);
@@ -252,7 +253,13 @@ let searchText = (req, res) => {
                     logger.info('err.message', 'issueController.editIssue', 10)
                     let apiResponse = response.generate(true, 'Database error', 400, null);
                     res.send(apiResponse);
-                } else {
+                } else if(check.isEmpty(result)){
+                    logger.info('err.message', 'issueController.editIssue', 10)
+                    let apiResponse = response.generate(true, 'No such word exists in the database' ,404, null);
+                    res.send(apiResponse);
+                }
+                
+                else {
                     let apiResponse = response.generate(false, 'Search results', 200, result);
                     res.send(apiResponse);
                 }
@@ -261,8 +268,8 @@ let searchText = (req, res) => {
 
 }
 
-  
-let verifyPermission = (req,res) =>{
+
+let verifyPermission = (req, res) => {
     console.log(req.body.issueId)
     console.log(req.user._id)
     issueModel.findOne({ issueId: req.body.issueId }).exec((err, result) => {
@@ -271,15 +278,15 @@ let verifyPermission = (req,res) =>{
             logger.info(err.message, 'issueController.editIssue', 10)
             let apiResponse = response.generate(true, 'Database error', 400, null);
             res.send(apiResponse)
-        }else if(req.user._id == result.assignee || req.user._id == result.reporter){
-                let apiResponse = response.generate(false,'verified',200,result);
-                res.send(apiResponse);
-            }else{
-                
-                let apiResponse = response.generate(true,'Only Reporter or Assignee can edit the issue',500,null);
-                res.send(apiResponse);
-            }
-        
+        } else if (req.user._id == result.assignee || req.user._id == result.reporter) {
+            let apiResponse = response.generate(false, 'verified', 200, result);
+            res.send(apiResponse);
+        } else {
+
+            let apiResponse = response.generate(true, 'Only Reporter or Assignee can edit the issue', 500, null);
+            res.send(apiResponse);
+        }
+
     })
 
 }
@@ -289,6 +296,6 @@ module.exports = {
     listIssuesOfAssignee: listIssuesOfAssignee,
     editIssue: editIssue,
     viewIssueById: viewIssueById,
-    verifyPermission : verifyPermission,
+    verifyPermission: verifyPermission,
     searchText: searchText
 }

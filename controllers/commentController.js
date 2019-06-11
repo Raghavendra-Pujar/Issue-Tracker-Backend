@@ -38,6 +38,11 @@ let createComment = (req, res) => {
 
     let create = () => {
         return new Promise((resolve, reject) => {
+
+            if(check.isEmpty(req.body.comment)){
+                let apiResponse = response.generate(true,'Comment cannot be empty',500,null);
+                reject(apiResponse);
+            }else{
             let commentObject = new commentModel({
                 commentId: shortid.generate(),
                 issueId: req.body.issueId,
@@ -51,7 +56,7 @@ let createComment = (req, res) => {
                     reject(apiResponse);
                 } else {
                     console.log('comment created')
-                    let apiResponse = response.generate(false, 'Comment added successfully', 200, resolve);
+                    let apiResponse = response.generate(false, 'Comment added successfully', 200, result);
             res.send(apiResponse);
 
             let notification = new notificationModel({
@@ -69,9 +74,12 @@ let createComment = (req, res) => {
                     
                 }
             })
+        }
 
         })
+    
     }
+
 
     checkIssueExists(req, res)
         .then(create)
@@ -97,7 +105,7 @@ let viewCommentByIsssueId = (req,res) => {
                         let apiResponse = response.generate(true, 'Issue not exists', 404, null);
                         reject(apiResponse);
                     }else{
-                        resolve(req);
+                        resolve(result);
                     }
                 })
             }
